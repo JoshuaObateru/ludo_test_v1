@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "73476318792",
+    "project_id": "ludo-test-14f46",
+    "storage_bucket": "ludo-test-14f46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73476318792:android:3311ef99dd300749cada7d",
+        "android_client_info": {
+          "package_name": "com.wlive.ludo_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73476318792-1mqhven7207fjqkg6k7hakmsgnvg69kt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3GfoASycmgQeE_P8uma4wKVV7FV6IIa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73476318792-1mqhven7207fjqkg6k7hakmsgnvg69kt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>73476318792-kbc505hk1h4f9gebv5qtb0fko79oi4cj.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.73476318792-kbc505hk1h4f9gebv5qtb0fko79oi4cj</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAzmlcRohqO8V2Xhaf68E1yfTyel_KogjA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>73476318792</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.wlive.ludoTest</string>
+	<key>PROJECT_ID</key>
+	<string>ludo-test-14f46</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ludo-test-14f46.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:73476318792:ios:fa58f358d137e02fcada7d</string>
+</dict>
+</plist>
