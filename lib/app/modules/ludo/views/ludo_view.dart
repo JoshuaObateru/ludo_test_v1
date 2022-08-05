@@ -8,6 +8,7 @@ import 'package:ludo_test/app/modules/ludo/views/board_view.dart';
 import 'package:ludo_test/app/modules/ludo/views/game_play.dart';
 import 'package:provider/provider.dart';
 
+import '../../../services/firebase_firestore_service.dart';
 import '../controllers/ludo_controller.dart';
 
 class LudoView extends StatefulWidget {
@@ -20,6 +21,8 @@ class LudoView extends StatefulWidget {
 class _LudoViewState extends State<LudoView> {
   GlobalKey keyBar = GlobalKey();
   void _onPressed() {}
+  FirebaseFirestoreService firebaseFirestoreService =
+      FirebaseFirestoreService();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

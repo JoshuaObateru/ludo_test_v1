@@ -15,7 +15,7 @@ class FirebaseFirestoreService {
   //game-rooms - ids - game-states
 
   FirebaseFirestoreService() {
-    userId = firebaseAuth.currentUser!.uid;
+    // userId = firebaseAuth.currentUser!.uid;
 
     // ref = firebaseFirestoreDb
     //     .collection(userPath)
@@ -40,8 +40,9 @@ class FirebaseFirestoreService {
     return ref.doc(id).delete();
   }
 
-  Future<DocumentReference> addDocument(Map<String, Object> data) {
-    return ref.add(data);
+  Future<DocumentReference> addDocument(Map<String, Object> data, String id) {
+    return firebaseFirestoreDb.collection("$rooms/$id").add(data);
+    // return ref.add(data);
   }
 
   Future<void> updateDocument(Map<String, Object> data, String id) {

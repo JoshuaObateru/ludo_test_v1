@@ -4,11 +4,12 @@ import 'package:ludo_test/app/modules/ludo/data/models/game_state.dart';
 import 'package:provider/provider.dart';
 
 class Dice extends StatelessWidget {
-  Future<void> updateDices(DiceModel dice) async {
+  Future<void> updateDices(DiceModel dice, GameState gameState) async {
     for (int i = 0; i < 6; i++) {
       var duration = 100 + i * 100;
       var future = Future.delayed(Duration(milliseconds: duration), () {
         dice.generateDiceOne();
+        gameState.dicerollSocket(dice);
       });
     }
   }
@@ -44,19 +45,21 @@ class Dice extends StatelessWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () async {
-                      await updateDices(dice);
+                      if (gameState.userModel?.turn == gameState.currentTurn) {
+                        await updateDices(dice, gameState);
 
-                      var future =
-                          Future.delayed(const Duration(seconds: 1), () {
-                        gameState.checkShouldPlay(dice.diceOne);
-                        print("ShouldPlayy 2 ${gameState.shouldPlay}");
-                        if (gameState.shouldPlay == false) {
-                          gameState.updateGameTurn(dice.diceOne);
+                        var future =
+                            Future.delayed(const Duration(seconds: 1), () {
+                          gameState.checkShouldPlay(dice.diceOne);
+                          print("ShouldPlayy 2 ${gameState.shouldPlay}");
+                          if (gameState.shouldPlay == false) {
+                            gameState.updateGameTurn(dice.diceOne);
 
-                          print("c $c");
-                          print("diceoneee ${dice.diceOne}");
-                        }
-                      });
+                            print("c $c");
+                            print("diceoneee ${dice.diceOne}");
+                          }
+                        });
+                      }
 
                       // gameState.updateGameTurn(dice.diceOne);
 

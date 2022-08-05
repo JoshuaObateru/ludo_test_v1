@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:ludo_test/app/modules/auth/views/select_token_view.dart';
 import 'package:ludo_test/app/modules/ludo/data/models/dice_model.dart';
 import 'package:ludo_test/app/modules/ludo/data/models/game_state.dart';
 import 'package:ludo_test/app/modules/ludo/views/ludo_view.dart';
@@ -34,15 +35,16 @@ void main() async {
   //after move is completed, move to the next item in the turn array
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(
-    GetMaterialApp(
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => GameState()),
+      ChangeNotifierProvider(create: (context) => DiceModel()),
+    ],
+    child: GetMaterialApp(
       title: "Application",
       // initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
-      home: MultiProvider(providers: [
-        ChangeNotifierProvider(create: (context) => GameState()),
-        ChangeNotifierProvider(create: (context) => DiceModel()),
-      ], child: LudoView(title: 'Flutter Demo Home Page')),
+      home: SelectTokenView(),
     ),
-  );
+  ));
 }

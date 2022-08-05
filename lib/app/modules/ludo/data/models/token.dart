@@ -1,4 +1,5 @@
 import 'package:ludo_test/app/modules/ludo/data/models/position.dart';
+import 'package:ludo_test/app/modules/ludo/data/models/user_model.dart';
 
 enum TokenType { green, yellow, blue, red }
 
@@ -11,5 +12,7 @@ class Token {
   TokenState tokenState;
   int? positionInPath;
   final int turn;
-  Token(this.type, this.tokenPosition, this.tokenState, this.id, this.turn);
+  UserModel? userModel;
+  Token(this.type, this.tokenPosition, this.tokenState, this.id, this.turn,
+      {this.userModel});
 }
