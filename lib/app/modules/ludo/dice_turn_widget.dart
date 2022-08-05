@@ -24,8 +24,20 @@ class DiceTurnWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameState = Provider.of<GameState>(context);
     Size size = MediaQuery.of(context).size;
-    return Row(
+    return Column(
+      crossAxisAlignment: isDiceLeading == true
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
+        gameState.userModel?.turn == turn
+            ? Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: Text(
+                  '${gameState.userModel?.name}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              )
+            : Container(),
         Card(
           elevation: 3,
           child: AnimatedContainer(

@@ -21,8 +21,6 @@ class LudoView extends StatefulWidget {
 class _LudoViewState extends State<LudoView> {
   GlobalKey keyBar = GlobalKey();
   void _onPressed() {}
-  FirebaseFirestoreService firebaseFirestoreService =
-      FirebaseFirestoreService();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -74,6 +72,14 @@ class _LudoViewState extends State<LudoView> {
       // floatingActionButton: Dice(),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    // Provider.of<GameState>(context, listen: false).socket.disconnect();
+    GameState().socket.disconnect();
+    super.dispose();
   }
 }
 

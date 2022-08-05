@@ -7,6 +7,7 @@ class Dice extends StatelessWidget {
   Future<void> updateDices(DiceModel dice, GameState gameState) async {
     for (int i = 0; i < 6; i++) {
       var duration = 100 + i * 100;
+      // gameState.dicerollSocket(dice);
       var future = Future.delayed(Duration(milliseconds: duration), () {
         dice.generateDiceOne();
         gameState.dicerollSocket(dice);
