@@ -37,29 +37,37 @@ class _LudoViewState extends State<LudoView> {
           Positioned(
             top: size.height * 0.05,
             left: 0,
-            child: const DiceTurnWidget(
+            child: DiceTurnWidget(
               turn: 1,
+              token: gameState.gameTokens![0],
+              isTop: true,
             ),
           ),
           Positioned(
               top: size.height * 0.05,
               right: 0,
-              child: const DiceTurnWidget(
+              child: DiceTurnWidget(
                 isDiceLeading: true,
                 turn: 2,
+                isTop: true,
+                token: gameState.gameTokens![4],
               )),
           Positioned(
               bottom: size.height * 0.05,
               right: 0,
-              child: const DiceTurnWidget(
+              child: DiceTurnWidget(
                 isDiceLeading: true,
                 turn: 3,
+                isTop: false,
+                token: gameState.gameTokens![8],
               )),
           Positioned(
               bottom: size.height * 0.05,
               left: 0,
-              child: const DiceTurnWidget(
+              child: DiceTurnWidget(
                 turn: 4,
+                isTop: false,
+                token: gameState.gameTokens![12],
               )),
         ],
       ),

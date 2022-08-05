@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:ludo_test/app/modules/ludo/data/models/token.dart';
 import 'package:provider/provider.dart';
 
 import 'data/models/game_state.dart';
@@ -12,13 +13,17 @@ class DiceTurnWidget extends StatelessWidget {
       this.isDiceLeading = false,
       required this.turn,
       this.color,
-      this.foregroundColor})
+      this.foregroundColor,
+      required this.token,
+      required this.isTop})
       : super(key: key);
 
   final bool isDiceLeading;
   final int turn;
   final Color? color;
   final Color? foregroundColor;
+  final Token token;
+  final bool isTop;
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +34,9 @@ class DiceTurnWidget extends StatelessWidget {
           ? CrossAxisAlignment.end
           : CrossAxisAlignment.start,
       children: [
-        gameState.userModel?.turn == turn
+        isTop == true && gameState.userModel?.name == token.userModel?.name
             ? Padding(
-                padding: const EdgeInsets.only(left: 12.0),
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Text(
                   '${gameState.userModel?.name}',
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -97,7 +102,16 @@ class DiceTurnWidget extends StatelessWidget {
                     ],
                   ),
           ),
-        )
+        ),
+        isTop == false && gameState.userModel?.name == token.userModel?.name
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: Text(
+                  '${gameState.userModel?.name}',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              )
+            : Container(),
       ],
     );
   }

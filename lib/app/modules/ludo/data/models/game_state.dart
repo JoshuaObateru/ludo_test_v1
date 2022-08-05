@@ -245,6 +245,9 @@ class GameState with ChangeNotifier {
       // set play to true
       if (numberOfTimesRolled! < 3) {
         numberOfTimesRolled = numberOfTimesRolled! + 1;
+        var future = Future.delayed(const Duration(milliseconds: 50), () {
+          updateGameStateToSocket();
+        });
         updateGameStateToSocket();
         // notifyListeners();
       } else {
