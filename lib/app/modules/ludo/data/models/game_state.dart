@@ -26,7 +26,10 @@ class GameState with ChangeNotifier {
   int? numberOfTimesRolled; // applicaple when a 6 is rolled
   bool? shouldPlay;
   UserModel? userModel;
+  // List<UserModel> users;
   // String? roomId;
+  List<int>? turns;
+  int? currentTurnIndex;
   GameState(
       {this.starPositions,
       this.greenInitital,
@@ -36,7 +39,9 @@ class GameState with ChangeNotifier {
       this.currentTurn,
       this.numberOfTimesRolled,
       this.shouldPlay,
-      this.gameTokens}) {
+      this.gameTokens,
+      this.turns,
+      this.currentTurnIndex}) {
     gameTokens = [
       //Green Tokens home
       Token(TokenType.green, Position(2, 2), TokenState.initial, 0, 1),
@@ -78,6 +83,8 @@ class GameState with ChangeNotifier {
     currentTurn = 1;
     numberOfTimesRolled = 0;
     shouldPlay = false;
+    turns = [1, 2, 3, 4];
+    currentTurnIndex = 0;
     // roomId =
     //     "${gameTokens?[0].userModel?.id}-${gameTokens?[4].userModel?.id}-${gameTokens?[8].userModel?.id}-${gameTokens?[12].userModel?.id}";
     initializeSocket();
@@ -133,6 +140,10 @@ class GameState with ChangeNotifier {
       shouldPlay = decoded['should_play'];
       currentTurn = decoded['current_turn'];
       numberOfTimesRolled = decoded['number_of_times_rolled'];
+      currentTurnIndex = decoded['current_turn_index'];
+      // turns = decoded['turns'];
+      turns = List<int>.from(decoded['turns']);
+      print(decoded['turns']);
 
       print("Current socket turn ${decoded['current_turn']}");
 
@@ -228,15 +239,52 @@ class GameState with ChangeNotifier {
     // });
   }
 
-  updateCurrentTurn() {
-    if (currentTurn! < 4) {
-      currentTurn = currentTurn! + 1;
+  // updateCurrentTurn() {
+  //   if (currentTurn! < 4) {
+  //     currentTurn = currentTurn! + 1;
+  //   } else {
+  //     currentTurn = 1;
+  //   }
+  //   updateGameStateToSocket();
+
+  //   notifyListeners();
+  // }
+
+  updateCurrentTurnNew() {
+    if (currentTurnIndex! + 1 < turns!.length) {
+      currentTurnIndex = currentTurnIndex! + 1;
+      currentTurn = turns![currentTurnIndex!];
     } else {
-      currentTurn = 1;
+      currentTurnIndex = 0;
+      currentTurn = turns![0];
     }
     updateGameStateToSocket();
 
     notifyListeners();
+  }
+
+  onGameLogout() {
+    print('disqualified');
+    for (int i = 0; i < turns!.length; i++) {
+      if (userModel!.turn == turns![i]) {
+        turns!.remove(turns![i]);
+        Future.delayed(const Duration(seconds: 1), () {
+          updateGameStateToSocket();
+        });
+      }
+    }
+    if (!turns!.contains(currentTurn)) {
+      if (currentTurn! < 4) {
+        currentTurn = currentTurn! + 1;
+      } else {
+        currentTurn = turns![0];
+      }
+      Future.delayed(const Duration(seconds: 1), () {
+        updateGameStateToSocket();
+      });
+    }
+    // remove turn from array and update
+    // check if current turn exists in the array else move to the next turn
   }
 
   updateGameTurn(int steps) {
@@ -245,7 +293,7 @@ class GameState with ChangeNotifier {
       // set play to true
       if (numberOfTimesRolled! < 3) {
         numberOfTimesRolled = numberOfTimesRolled! + 1;
-        var future = Future.delayed(const Duration(milliseconds: 50), () {
+        var future = Future.delayed(const Duration(seconds: 1), () {
           updateGameStateToSocket();
         });
         updateGameStateToSocket();
@@ -253,14 +301,19 @@ class GameState with ChangeNotifier {
       } else {
         numberOfTimesRolled = 0;
         var future = Future.delayed(const Duration(seconds: 1), () {
-          updateCurrentTurn();
+          // updateCurrentTurn();
+          updateCurrentTurnNew();
+          updateGameStateToSocket();
+        });
+        Future.delayed(const Duration(seconds: 2), () {
           updateGameStateToSocket();
         });
       }
     } else {
       numberOfTimesRolled = 0;
       var future = Future.delayed(const Duration(seconds: 1), () {
-        updateCurrentTurn();
+        // updateCurrentTurn();
+        updateCurrentTurnNew();
         updateGameStateToSocket();
       });
     }
@@ -349,7 +402,9 @@ class GameState with ChangeNotifier {
             "star_positions": _destrusturePositions(starPositions!),
             "should_play": shouldPlay,
             "current_turn": currentTurn,
-            "number_of_times_rolled": numberOfTimesRolled
+            "number_of_times_rolled": numberOfTimesRolled,
+            "current_turn_index": currentTurnIndex,
+            "turns": turns
           }));
     });
 

@@ -34,11 +34,13 @@ class DiceTurnWidget extends StatelessWidget {
           ? CrossAxisAlignment.end
           : CrossAxisAlignment.start,
       children: [
-        isTop == true && gameState.userModel?.name == token.userModel?.name
+        isTop == true
             ? Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Text(
-                  '${gameState.userModel?.name}',
+                  token.userModel?.id != gameState.userModel?.id
+                      ? '${token.userModel?.name}'
+                      : '${token.userModel?.name}(You)',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               )
@@ -103,11 +105,13 @@ class DiceTurnWidget extends StatelessWidget {
                   ),
           ),
         ),
-        isTop == false && gameState.userModel?.name == token.userModel?.name
+        isTop == false
             ? Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0),
                 child: Text(
-                  '${gameState.userModel?.name}',
+                  token.userModel?.id != gameState.userModel?.id
+                      ? '${token.userModel?.name}'
+                      : '${token.userModel?.name}(You)',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               )

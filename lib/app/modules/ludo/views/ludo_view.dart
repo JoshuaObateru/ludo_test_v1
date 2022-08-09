@@ -86,7 +86,7 @@ class _LudoViewState extends State<LudoView> {
   void dispose() {
     // TODO: implement dispose
     // Provider.of<GameState>(context, listen: false).socket.disconnect();
-    GameState().socket.disconnect();
+    GameState().onGameLogout();
     super.dispose();
   }
 }
