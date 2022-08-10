@@ -53,12 +53,14 @@ class Dice extends StatelessWidget {
                             Future.delayed(const Duration(seconds: 1), () {
                           gameState.checkShouldPlay(dice.diceOne);
                           print("ShouldPlayy 2 ${gameState.shouldPlay}");
-                          if (gameState.shouldPlay == false) {
-                            gameState.updateGameTurn(dice.diceOne);
+                          Future.delayed(const Duration(seconds: 1), () {
+                            if (gameState.shouldPlay == false) {
+                              gameState.updateGameTurn(dice.diceOne);
 
-                            print("c $c");
-                            print("diceoneee ${dice.diceOne}");
-                          }
+                              print("c $c");
+                              print("diceoneee ${dice.diceOne}");
+                            }
+                          });
                         });
                       }
 

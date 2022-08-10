@@ -146,6 +146,7 @@ class GameState with ChangeNotifier {
       print(decoded['turns']);
 
       print("Current socket turn ${decoded['current_turn']}");
+      print("Current socket should_play ${decoded['should_play']}");
 
       // isLoading.value = false;
     });
@@ -213,18 +214,18 @@ class GameState with ChangeNotifier {
         if (token.tokenState == TokenState.initial &&
             steps == 6 &&
             token.turn == currentTurn) {
-          shouldPlay = true;
+          // shouldPlay = true;
           isSelectedArr.add(true);
           print(
               "ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
         } else if (token.tokenState != TokenState.initial &&
             token.turn == currentTurn) {
-          shouldPlay = true;
+          // shouldPlay = true;
           isSelectedArr.add(true);
           print(
               "ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
         } else {
-          shouldPlay = false;
+          // shouldPlay = false;
           isSelectedArr.add(false);
           print(
               "ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
@@ -254,88 +255,107 @@ class GameState with ChangeNotifier {
     if (currentTurnIndex! + 1 < turns!.length) {
       currentTurnIndex = currentTurnIndex! + 1;
       currentTurn = turns![currentTurnIndex!];
+      updateGameStateToSocket();
     } else {
       currentTurnIndex = 0;
       currentTurn = turns![0];
+      updateGameStateToSocket();
     }
-    updateGameStateToSocket();
+    Future.delayed(const Duration(seconds: 1), () {
+      updateGameStateToSocket();
+    });
+    // updateGameStateToSocket();
 
     notifyListeners();
   }
 
   onGameLogout() {
     print('disqualified');
-    for (int i = 0; i < turns!.length; i++) {
-      if (userModel!.turn == turns![i]) {
-        turns!.remove(turns![i]);
-        Future.delayed(const Duration(seconds: 1), () {
-          updateGameStateToSocket();
-        });
-      }
-    }
-    if (!turns!.contains(currentTurn)) {
-      if (currentTurn! < 4) {
-        currentTurn = currentTurn! + 1;
-      } else {
-        currentTurn = turns![0];
-      }
-      Future.delayed(const Duration(seconds: 1), () {
-        updateGameStateToSocket();
-      });
-    }
+    // for (int i = 0; i < turns!.length; i++) {
+    //   // if (userModel!.turn == turns![i]) {
+    //   //   turns!.remove(turns![i]);
+    //   //   Future.delayed(const Duration(seconds: 1), () {
+    //   //     updateGameStateToSocket();
+    //   //   });
+    //   // }
+    // }
+    // if (!turns!.contains(currentTurn)) {
+    //   if (currentTurn! < 4) {
+    //     currentTurn = currentTurn! + 1;
+    //   } else {
+    //     currentTurn = turns![0];
+    //   }
+    //   Future.delayed(const Duration(seconds: 1), () {
+    //     updateGameStateToSocket();
+    //   });
+    // }
     // remove turn from array and update
     // check if current turn exists in the array else move to the next turn
   }
 
   updateGameTurn(int steps) {
     // notifyListeners();
-    if (steps == 6) {
-      // set play to true
-      if (numberOfTimesRolled! < 3) {
-        numberOfTimesRolled = numberOfTimesRolled! + 1;
-        var future = Future.delayed(const Duration(seconds: 1), () {
-          updateGameStateToSocket();
-        });
-        updateGameStateToSocket();
-        // notifyListeners();
-      } else {
-        numberOfTimesRolled = 0;
-        var future = Future.delayed(const Duration(seconds: 1), () {
-          // updateCurrentTurn();
-          updateCurrentTurnNew();
-          updateGameStateToSocket();
-        });
-        Future.delayed(const Duration(seconds: 2), () {
-          updateGameStateToSocket();
-        });
-      }
-    } else {
-      numberOfTimesRolled = 0;
+    if (steps != 6) {
+      updateCurrentTurnNew();
       var future = Future.delayed(const Duration(seconds: 1), () {
         // updateCurrentTurn();
-        updateCurrentTurnNew();
         updateGameStateToSocket();
+        notifyListeners();
       });
     }
-    // var future = Future.delayed(const Duration(seconds: 2), () {
-    //   if (steps == 6) {
-    //     if (numberOfTimesRolled! < 3) {
-    //       numberOfTimesRolled = numberOfTimesRolled! + 1;
-    //       // notifyListeners();
-    //     } else {
-    //       numberOfTimesRolled = 0;
-    //       updateCurrentTurn();
-    //     }
-    //   } else {
-
-    //   }
-    // });
-    // socket.emit('turn_and_rolled_number', {
-    //   "current_turn": currentTurn,
-    //   "number_of_times_rolled": numberOfTimesRolled
-    // });
     updateGameStateToSocket();
+    notifyListeners();
   }
+
+  // updateGameTurn(int steps) {
+  //   // notifyListeners();
+  //   if (steps == 6) {
+  //     // set play to true
+  //     if (numberOfTimesRolled! < 3) {
+  //       numberOfTimesRolled = numberOfTimesRolled! + 1;
+  //       var future = Future.delayed(const Duration(seconds: 1), () {
+  //         updateGameStateToSocket();
+  //       });
+  //       updateGameStateToSocket();
+  //       // notifyListeners();
+  //     } else {
+  //       numberOfTimesRolled = 0;
+  //       var future = Future.delayed(const Duration(seconds: 1), () {
+  //         // updateCurrentTurn();
+  //         updateCurrentTurnNew();
+  //         updateGameStateToSocket();
+  //       });
+  //       Future.delayed(const Duration(seconds: 2), () {
+  //         updateGameStateToSocket();
+  //       });
+  //     }
+  //   } else {
+  //     numberOfTimesRolled = 0;
+  //     var future = Future.delayed(const Duration(seconds: 1), () {
+  //       // updateCurrentTurn();
+  //       updateCurrentTurnNew();
+  //       updateGameStateToSocket();
+  //     });
+  //   }
+  //   // var future = Future.delayed(const Duration(seconds: 2), () {
+  //   //   if (steps == 6) {
+  //   //     if (numberOfTimesRolled! < 3) {
+  //   //       numberOfTimesRolled = numberOfTimesRolled! + 1;
+  //   //       // notifyListeners();
+  //   //     } else {
+  //   //       numberOfTimesRolled = 0;
+  //   //       updateCurrentTurn();
+  //   //     }
+  //   //   } else {
+
+  //   //   }
+  //   // });
+  //   // socket.emit('turn_and_rolled_number', {
+  //   //   "current_turn": currentTurn,
+  //   //   "number_of_times_rolled": numberOfTimesRolled
+  //   // });
+  //   updateGameStateToSocket();
+  // }
 
   List<Map<String, dynamic>> _destructureGameTokens() {
     List<Map<String, dynamic>> mappedGameTokens = [];
@@ -483,11 +503,13 @@ class GameState with ChangeNotifier {
       print("tokenId is: ${token.id}");
       var future = Future.delayed(const Duration(seconds: 1), () {
         shouldPlay = false;
+        // checkShouldPlay(steps);
         updateGameTurn(steps);
-
-        print("c $steps");
-        print("diceoneee ${steps}");
-        updateGameStateToSocket();
+        Future.delayed(const Duration(seconds: 1), () {
+          print("c $steps");
+          print("diceoneee ${steps}");
+          updateGameStateToSocket();
+        });
       });
 
       notifyListeners();
@@ -511,6 +533,7 @@ class GameState with ChangeNotifier {
           gameTokens![token.id].positionInPath = stepLoc;
           token.positionInPath = stepLoc;
           updateGameStateToSocket();
+          shouldPlay = false;
           notifyListeners();
         });
       }
@@ -538,12 +561,15 @@ class GameState with ChangeNotifier {
           notifyListeners();
         });
       }
+      shouldPlay = false;
+      // checkShouldPlay(steps);
       var future = Future.delayed(const Duration(seconds: 1), () {
-        shouldPlay = false;
         updateGameTurn(steps);
-        updateGameStateToSocket();
-        print("c $steps");
-        print("diceoneee ${steps}");
+        Future.delayed(const Duration(seconds: 1), () {
+          print("c $steps");
+          print("diceoneee ${steps}");
+          updateGameStateToSocket();
+        });
       });
     }
   }
