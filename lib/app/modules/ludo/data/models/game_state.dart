@@ -14,7 +14,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 class GameState with ChangeNotifier {
   late Socket socket;
-  DiceModel dice = DiceModel();
+  // DiceModel dice = DiceModel();
   // List<Token> gameTokens = List<Token>(16);
   List<Token>? gameTokens = <Token>[];
   List<Position>? starPositions;
@@ -92,8 +92,7 @@ class GameState with ChangeNotifier {
   }
 
   Future<void> initializeSocket() async {
-    socket =
-        io("https://chat-socket-test-backend.herokuapp.com/", <String, dynamic>{
+    socket = io("https://chat-socket-test-backend.herokuapp.com/", <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
     });
@@ -118,29 +117,25 @@ class GameState with ChangeNotifier {
       var decoded = json.decode(data);
       decodeSocketGameTokens(decoded['game_tokens']);
       for (int i = 0; i < decoded['green_initial'].length; i++) {
-        greenInitital![i] = Position(decoded['green_initial'][i]['row'],
-            decoded['green_initial'][i]['column']);
+        greenInitital![i] = Position(decoded['green_initial'][i]['row'], decoded['green_initial'][i]['column']);
       }
       for (int i = 0; i < decoded['red_initial'].length; i++) {
-        redInitital![i] = Position(decoded['red_initial'][i]['row'],
-            decoded['red_initial'][i]['column']);
+        redInitital![i] = Position(decoded['red_initial'][i]['row'], decoded['red_initial'][i]['column']);
       }
       for (int i = 0; i < decoded['yellow_initial'].length; i++) {
-        yellowInitital![i] = Position(decoded['yellow_initial'][i]['row'],
-            decoded['yellow_initial'][i]['column']);
+        yellowInitital![i] = Position(decoded['yellow_initial'][i]['row'], decoded['yellow_initial'][i]['column']);
       }
       for (int i = 0; i < decoded['blue_initial'].length; i++) {
-        blueInitital![i] = Position(decoded['blue_initial'][i]['row'],
-            decoded['blue_initial'][i]['column']);
+        blueInitital![i] = Position(decoded['blue_initial'][i]['row'], decoded['blue_initial'][i]['column']);
       }
       for (int i = 0; i < decoded['star_positions'].length; i++) {
-        starPositions![i] = Position(decoded['star_positions'][i]['row'],
-            decoded['star_positions'][i]['column']);
+        starPositions![i] = Position(decoded['star_positions'][i]['row'], decoded['star_positions'][i]['column']);
       }
-      shouldPlay = decoded['should_play'];
       currentTurn = decoded['current_turn'];
-      numberOfTimesRolled = decoded['number_of_times_rolled'];
       currentTurnIndex = decoded['current_turn_index'];
+      shouldPlay = decoded['should_play'];
+      numberOfTimesRolled = decoded['number_of_times_rolled'];
+
       // turns = decoded['turns'];
       turns = List<int>.from(decoded['turns']);
       print(decoded['turns']);
@@ -198,8 +193,7 @@ class GameState with ChangeNotifier {
       notifyListeners();
       Get.to(() => const LudoView(title: 'Ludo'));
     } else {
-      Get.snackbar('Info', "Token taken already",
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('Info', "Token taken already", snackPosition: SnackPosition.BOTTOM);
     }
     notifyListeners();
   }
@@ -211,24 +205,18 @@ class GameState with ChangeNotifier {
     for (int i = 0; i < gameTokens!.length; i++) {
       Token token = gameTokens![i];
       if (token.turn == currentTurn) {
-        if (token.tokenState == TokenState.initial &&
-            steps == 6 &&
-            token.turn == currentTurn) {
+        if (token.tokenState == TokenState.initial && steps == 6 && token.turn == currentTurn) {
           // shouldPlay = true;
           isSelectedArr.add(true);
-          print(
-              "ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
-        } else if (token.tokenState != TokenState.initial &&
-            token.turn == currentTurn) {
+          print("ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
+        } else if (token.tokenState != TokenState.initial && token.turn == currentTurn) {
           // shouldPlay = true;
           isSelectedArr.add(true);
-          print(
-              "ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
+          print("ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
         } else {
           // shouldPlay = false;
           isSelectedArr.add(false);
-          print(
-              "ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
+          print("ShouldPlayy 1 $shouldPlay, ${token.tokenState}, ${token.turn}, $currentTurn, $steps");
         }
       }
     }
@@ -261,9 +249,9 @@ class GameState with ChangeNotifier {
       currentTurn = turns![0];
       updateGameStateToSocket();
     }
-    Future.delayed(const Duration(seconds: 1), () {
-      updateGameStateToSocket();
-    });
+    // Future.delayed(const Duration(seconds: 1), () {
+    //   updateGameStateToSocket();
+    // });
     // updateGameStateToSocket();
 
     notifyListeners();
@@ -298,12 +286,12 @@ class GameState with ChangeNotifier {
     if (steps != 6) {
       updateCurrentTurnNew();
       var future = Future.delayed(const Duration(seconds: 1), () {
-        // updateCurrentTurn();
+        // updateCurrentTurnNew();
         updateGameStateToSocket();
         notifyListeners();
       });
     }
-    updateGameStateToSocket();
+    // updateGameStateToSocket();
     notifyListeners();
   }
 
@@ -364,18 +352,11 @@ class GameState with ChangeNotifier {
       mappedGameTokens.add({
         "id": token.id,
         "type": token.type.toString(),
-        "tokenPosition": {
-          "row": token.tokenPosition.row,
-          "column": token.tokenPosition.column
-        },
+        "tokenPosition": {"row": token.tokenPosition.row, "column": token.tokenPosition.column},
         "tokenState": token.tokenState.toString(),
         "positionInPath": token.positionInPath,
         "turn": token.turn,
-        "userModel": {
-          "id": token.userModel?.id,
-          "turn": token.userModel?.turn,
-          "name": token.userModel?.name
-        }
+        "userModel": {"id": token.userModel?.id, "turn": token.userModel?.turn, "name": token.userModel?.name}
       });
       print("Position in path ${token.positionInPath}");
     }
@@ -386,21 +367,18 @@ class GameState with ChangeNotifier {
   decodeSocketGameTokens(List<dynamic> data) {
     for (int i = 0; i < data.length; i++) {
       dynamic dataObject = data[i];
-      gameTokens![i].tokenPosition = Position(
-          dataObject['tokenPosition']['row'],
-          dataObject['tokenPosition']['column']);
+      gameTokens![i].tokenPosition =
+          Position(dataObject['tokenPosition']['row'], dataObject['tokenPosition']['column']);
 
-      gameTokens![i].tokenState = TokenState.values
-          .firstWhere((e) => e.toString() == dataObject['tokenState']);
+      gameTokens![i].tokenState = TokenState.values.firstWhere((e) => e.toString() == dataObject['tokenState']);
       gameTokens![i].positionInPath = dataObject['positionInPath'];
-      gameTokens![i].userModel = UserModel(dataObject['userModel']['id'],
-          dataObject['userModel']['turn'], dataObject['userModel']['name']);
+      gameTokens![i].userModel =
+          UserModel(dataObject['userModel']['id'], dataObject['userModel']['turn'], dataObject['userModel']['name']);
     }
     notifyListeners();
   }
 
-  List<Map<String, dynamic>> _destrusturePositions(
-      List<Position> initialPositions) {
+  List<Map<String, dynamic>> _destrusturePositions(List<Position> initialPositions) {
     List<Map<String, dynamic>> positions = [];
     for (int i = 0; i < initialPositions.length; i++) {
       Position pos = initialPositions[i];
@@ -450,8 +428,7 @@ class GameState with ChangeNotifier {
   }
 
   dicerollSocket(DiceModel dice) {
-    socket.emit('dice_roll',
-        {"dice_number": dice.diceOne, "dice_number_count": dice.diceOneCount});
+    socket.emit('dice_roll', {"dice_number": dice.diceOne, "dice_number_count": dice.diceOneCount});
     // //listen for when Dice State Changes.
     socket.on('dice_state_changed', (data) {
       print(data); //
@@ -505,9 +482,9 @@ class GameState with ChangeNotifier {
         shouldPlay = false;
         // checkShouldPlay(steps);
         updateGameTurn(steps);
-        Future.delayed(const Duration(seconds: 1), () {
+        Future.delayed(const Duration(seconds: 2), () {
           print("c $steps");
-          print("diceoneee ${steps}");
+          print("diceoneee ${steps}, should_play_local $shouldPlay, current_turn_local $currentTurn");
           updateGameStateToSocket();
         });
       });
@@ -527,11 +504,12 @@ class GameState with ChangeNotifier {
         duration = duration + 500;
         var future = Future.delayed(Duration(milliseconds: duration), () {
           int stepLoc = token.positionInPath! + 1;
-          gameTokens![token.id].tokenPosition =
-              _getPosition(token.type, stepLoc);
+          gameTokens![token.id].tokenPosition = _getPosition(token.type, stepLoc);
           print("token type: ${token.type}");
           gameTokens![token.id].positionInPath = stepLoc;
           token.positionInPath = stepLoc;
+          // updateGameTurn(steps); // addedddddddddddddd
+
           updateGameStateToSocket();
           shouldPlay = false;
           notifyListeners();
@@ -543,8 +521,7 @@ class GameState with ChangeNotifier {
           duration = duration + 100;
           var future2 = Future.delayed(Duration(milliseconds: duration), () {
             int stepLoc = cutToken.positionInPath! - 1;
-            gameTokens![cutToken.id].tokenPosition =
-                _getPosition(cutToken.type, stepLoc);
+            gameTokens![cutToken.id].tokenPosition = _getPosition(cutToken.type, stepLoc);
             gameTokens![cutToken.id].positionInPath = stepLoc;
             cutToken.positionInPath = stepLoc;
             updateGameStateToSocket();
@@ -565,17 +542,16 @@ class GameState with ChangeNotifier {
       // checkShouldPlay(steps);
       var future = Future.delayed(const Duration(seconds: 1), () {
         updateGameTurn(steps);
-        Future.delayed(const Duration(seconds: 1), () {
+        Future.delayed(const Duration(seconds: 2), () {
           print("c $steps");
-          print("diceoneee ${steps}");
+          print("diceoneee ${steps}, should_play_local $shouldPlay, current_turn_local $currentTurn");
           updateGameStateToSocket();
         });
       });
     }
   }
 
-  Token? _updateBoardState(
-      Token token, Position destination, int pathPosition) {
+  Token? _updateBoardState(Token token, Position destination, int pathPosition) {
     Token? cutToken;
     //when the destination is on any star
     if (starPositions!.contains(destination)) {
@@ -624,9 +600,8 @@ class GameState with ChangeNotifier {
         }
       }
       //place token
-      gameTokens![token.id].tokenState = tokenAtDestinationSameType.length > 0
-          ? TokenState.safeinpair
-          : TokenState.normal;
+      gameTokens![token.id].tokenState =
+          tokenAtDestinationSameType.length > 0 ? TokenState.safeinpair : TokenState.normal;
       // this.gameTokens![token.id].tokenPosition = destination;
       // this.gameTokens![token.id].positionInPath = pathPosition;
       return cutToken;
